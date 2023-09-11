@@ -151,10 +151,19 @@ const resolvers = {
 
   Mutation: {
     addBook: (root, args) => {
+      console.log(authors, " ", args);
       const book = { ...args, id: uuid() };
       const author = { name: args.author, id: uuid() };
       books = books.concat(book);
-      authors = authors.concat(author);
+
+      const findAuthor = authors.findIndex((a) => a.name == args.author);
+
+      if (findAuthor > -1) {
+        author[findAuthor] = { books: book };
+      } else {
+        authors = authors.concat(author);
+      }
+
       return book;
     },
 
