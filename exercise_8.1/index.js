@@ -115,6 +115,11 @@ type Mutation {
     name: String!
     setBornTo: Int!
   ): Author
+
+  editBorn(
+    name: String!
+    born: Int!
+  ): Author
 }
 `;
 
@@ -151,7 +156,6 @@ const resolvers = {
 
   Mutation: {
     addBook: (root, args) => {
-      console.log(authors, " ", args);
       const book = { ...args, id: uuid() };
       const author = { name: args.author, id: uuid() };
       books = books.concat(book);
@@ -171,6 +175,18 @@ const resolvers = {
       return authors.find((a) =>
         a.name === args.name ? (a.born = args.setBornTo) : ""
       );
+    },
+
+    editBorn: (root, args) => {
+      const person = authors.find((p) => p.name === args.name);
+
+      if (!person) {
+        return null;
+      }
+
+      const updatedAuthor = { ...person, born: args.born };
+      authors = authors.map((p) => (p.name === args.name ? updatedAuthor : p));
+      return updatedAuthor;
     },
   },
 };
