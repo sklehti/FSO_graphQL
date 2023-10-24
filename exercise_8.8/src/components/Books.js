@@ -11,10 +11,10 @@ const Books = ({ books }) => {
             <th>authors</th>
             <th>published</th>
           </tr>
-          {books.map((b) => (
-            <tr key={b.id}>
+          {books.map((b, index) => (
+            <tr key={index}>
               <td>{b.title}</td>
-              <td>{b.author}</td>
+              <td>{b.author.name}</td>
               <td>{b.published}</td>
             </tr>
           ))}

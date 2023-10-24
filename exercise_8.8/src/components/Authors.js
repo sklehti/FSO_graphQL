@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { EDIT_BORN } from "../queries";
+import { EDIT_AUTHOR } from "../queries";
 import { useMutation } from "@apollo/client";
 import Select from "react-select";
 
-const Authors = ({ authors }) => {
+const Authors = ({ authors, token }) => {
   const [born, setBorn] = useState(0);
   const [selectedAuthor, setSelectedAuthor] = useState(null);
   const [options, setOptions] = useState([]);
 
-  const [changeBorn] = useMutation(EDIT_BORN);
+  const [editAuthor] = useMutation(EDIT_AUTHOR);
 
   useEffect(() => {
     authors.map((p) => {
@@ -19,16 +19,15 @@ const Authors = ({ authors }) => {
     });
   }, []);
 
-  const submit = (e) => {
-    console.log(born, "mitä", selectedAuthor);
+  const submit = async (e) => {
+    e.preventDefault();
 
-    changeBorn({
-      variables: { name: selectedAuthor.value, born: parseInt(born, 10) },
+    editAuthor({
+      variables: { name: selectedAuthor.value, setBornTo: parseInt(born, 10) },
     });
 
     setSelectedAuthor(null);
     setBorn(0);
-    e.preventDefault();
   };
 
   return (
@@ -52,25 +51,30 @@ const Authors = ({ authors }) => {
       </table>
 
       <h3>Set birthyear</h3>
-      <form onSubmit={submit}>
-        <div>
-          name
-          <Select
-            value={selectedAuthor}
-            onChange={setSelectedAuthor}
-            options={options}
-          />
-        </div>
 
-        <div>
-          born
-          <input
-            value={born === 0 ? "" : born}
-            onChange={({ target }) => setBorn(target.value)}
-          />
-        </div>
-        <button type="submit">update author</button>
-      </form>
+      {token ? (
+        <form onSubmit={submit}>
+          <div>
+            name
+            <Select
+              value={selectedAuthor}
+              onChange={setSelectedAuthor}
+              options={options}
+            />
+          </div>
+
+          <div>
+            born
+            <input
+              value={born === 0 ? "" : born}
+              onChange={({ target }) => setBorn(target.value)}
+            />
+          </div>
+          <button type="submit">update author</button>
+        </form>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

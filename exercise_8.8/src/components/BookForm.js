@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOK } from "../queries";
 
-const BookForm = () => {
+const BookForm = ({ setSelectedButton }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState(0);
@@ -18,6 +18,7 @@ const BookForm = () => {
       variables: { title, author, published: parseInt(published, 10), genres },
     });
 
+    setSelectedButton(2);
     setTitle("");
     setAuthor("");
     setPublished(0);
