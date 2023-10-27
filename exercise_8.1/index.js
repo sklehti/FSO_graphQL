@@ -120,7 +120,10 @@ const resolvers = {
     },
 
     me: (root, args, context) => {
-      return { username: context.username };
+      return {
+        username: context.username,
+        favoriteGenre: context.favoriteGenre,
+      };
     },
   },
 
@@ -203,6 +206,7 @@ const resolvers = {
       try {
         if (!person) {
           const newAuthor = await Author.create({ name: args.author });
+
           book = new Book({ ...args, author: newAuthor });
           await book.save();
         } else {
