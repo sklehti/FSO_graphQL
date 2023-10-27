@@ -46,7 +46,9 @@ const LoginForm = ({ setToken, setSelectedButton }) => {
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type="submit">login</button>
+        <button type="submit" style={{ cursor: "pointer" }}>
+          login
+        </button>
       </form>
     </div>
   );

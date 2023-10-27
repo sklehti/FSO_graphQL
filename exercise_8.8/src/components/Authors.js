@@ -50,28 +50,29 @@ const Authors = ({ authors, token }) => {
         </tbody>
       </table>
 
-      <h3>Set birthyear</h3>
-
       {token ? (
-        <form onSubmit={submit}>
-          <div>
-            name
-            <Select
-              value={selectedAuthor}
-              onChange={setSelectedAuthor}
-              options={options}
-            />
-          </div>
+        <>
+          <h3>Set birthyear</h3>
+          <form onSubmit={submit}>
+            <div>
+              name
+              <Select
+                value={selectedAuthor}
+                onChange={setSelectedAuthor}
+                options={options}
+              />
+            </div>
 
-          <div>
-            born
-            <input
-              value={born === 0 ? "" : born}
-              onChange={({ target }) => setBorn(target.value)}
-            />
-          </div>
-          <button type="submit">update author</button>
-        </form>
+            <div>
+              born
+              <input
+                value={born === 0 ? "" : born}
+                onChange={({ target }) => setBorn(target.value)}
+              />
+            </div>
+            <button type="submit">update author</button>
+          </form>
+        </>
       ) : (
         <></>
       )}

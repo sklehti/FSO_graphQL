@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { CREATE_BOOK } from "../queries";
 
-const BookForm = ({ setSelectedButton }) => {
+const BookForm = ({ setSelectedButton, setSelectedGenre }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState(0);
@@ -14,16 +14,28 @@ const BookForm = ({ setSelectedButton }) => {
   const submit = async (e) => {
     e.preventDefault();
 
-    createBook({
-      variables: { title, author, published: parseInt(published, 10), genres },
-    });
+    if (title.length < 4 || author.length < 2) {
+      console.log("the title and/or the author should be longer!");
+    } else if (published <= 0) {
+      console.log("fill in all fields correct!");
+    } else {
+      createBook({
+        variables: {
+          title,
+          author,
+          published: Number(published),
+          genres,
+        },
+      });
 
-    setSelectedButton(2);
-    setTitle("");
-    setAuthor("");
-    setPublished(0);
-    setGenre("");
-    setGenres([]);
+      setSelectedButton(2);
+      setSelectedGenre(null);
+      setTitle("");
+      setAuthor("");
+      setPublished(0);
+      setGenre("");
+      setGenres([]);
+    }
   };
 
   const handleGenre = (e) => {
@@ -52,6 +64,10 @@ const BookForm = ({ setSelectedButton }) => {
           <div>
             published
             <input
+              type="number"
+              min="1500"
+              max="2099"
+              step="1"
               value={published === 0 ? "" : published}
               onChange={({ target }) => setPublished(target.value)}
             />
@@ -61,7 +77,9 @@ const BookForm = ({ setSelectedButton }) => {
               value={genre}
               onChange={({ target }) => setGenre(target.value)}
             />
-            <button onClick={handleGenre}>add genre</button>
+            <button onClick={handleGenre} style={{ cursor: "pointer" }}>
+              add genre
+            </button>
           </div>
         </div>
         <div>
@@ -70,7 +88,9 @@ const BookForm = ({ setSelectedButton }) => {
             <span key={index}>{`${g} `}</span>
           ))}
         </div>
-        <button type="submit">create book</button>
+        <button type="submit" style={{ cursor: "pointer" }}>
+          create book
+        </button>
       </form>
     </div>
   );
