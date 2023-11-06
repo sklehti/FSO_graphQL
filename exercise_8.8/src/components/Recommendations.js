@@ -12,6 +12,7 @@ const Recommendations = ({ token }) => {
     variables: {
       genre: genre,
     },
+    pollInterval: 2000,
   });
 
   useEffect(() => {

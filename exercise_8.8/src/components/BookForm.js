@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { CREATE_BOOK } from "../queries";
+import { ALL_BOOKS, CREATE_BOOK } from "../queries";
+import { updateCache } from "../App";
 
 const BookForm = ({ setSelectedButton, setSelectedGenre }) => {
   const [title, setTitle] = useState("");
@@ -9,7 +10,21 @@ const BookForm = ({ setSelectedButton, setSelectedGenre }) => {
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
-  const [createBook] = useMutation(CREATE_BOOK);
+  const [createBook] = useMutation(CREATE_BOOK, {
+    onError: (error) => {
+      console.log(error);
+    },
+    update: (cache, response) => {
+      window.alert(
+        `Title: ${response.data.addBook.title}\nauthor: ${
+          response.data.addBook.author.name
+        }\npublished: ${
+          response.data.addBook.published
+        }\ngenres: ${response.data.addBook.genres.map((g) => g)}`
+      );
+      updateCache(cache, { query: ALL_BOOKS }, response.data.addBook);
+    },
+  });
 
   const submit = async (e) => {
     e.preventDefault();
